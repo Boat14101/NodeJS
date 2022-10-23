@@ -2,16 +2,24 @@ const express = require('express');
 const chalk = require('chalk')
 const debug = require('debug')('app');
 const morgan = require('morgan');
+const path = require('path');
 
 const app = express();
-const port = 3000;
+const PORT = process.env.PORT;
+const productsRouter = require("./src/router/productsRoute");
 
 app.use(morgan('combined'));
+app.use(express.static(path.join(__dirname,"/public/")));
+
+app.set("views","./src/views");
+app.set("view engine", "ejs")
+
+app.use("/products", productsRouter)
 
 app.get("/", (req,res) =>{
-    res.send('hello thanapon tt');
+    res.render('index',{username: 'Thanapon'});
 })
 
-app.listen(port, ()=>{
-    debug("listening on port " + chalk.green(port));
+app.listen(PORT, ()=>{
+    debug("listening on port " + chalk.green(PORT));
 })
